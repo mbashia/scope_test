@@ -8,24 +8,33 @@ defmodule ScopeTestWeb.Router do
     plug :put_root_layout, {ScopeTestWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug ScopeTestWeb.Plugs.InspectHost  # Add the custom plug to inspect the host
-
+    # Add the custom plug to inspect the host
+    plug ScopeTestWeb.Plugs.InspectHost
   end
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/", ScopeTestWeb do
-    pipe_through :browser
+  # scope "/", ScopeTestWeb do
+  #   pipe_through :browser
 
-    get "/", PageController, :home
-  end
+  #   get "/", PageController, :home
+  # end
 
   scope "/scope_test", ScopeTestWeb do
     pipe_through :browser
-    live "/main_domain", MainDomainLive.Index, :index
+    live "/default_domain", DefaultDomainLive.Index, :index
+  end
+
+  scope "/scope_test", ScopeTestWeb, host: ["example.localhost"] do
+    pipe_through :browser
     live "/other_domain", OtherDomainLive.Index, :index
+  end
+
+  scope "/scope_test", ScopeTestWeb, host: ["localhost"] do
+    pipe_through :browser
+    live "/main_domain", MainDomainLive.Index, :index
   end
 
   # Other scopes may use custom stacks.
