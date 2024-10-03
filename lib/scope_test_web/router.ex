@@ -10,6 +10,7 @@ defmodule ScopeTestWeb.Router do
     plug :put_secure_browser_headers
     # Add the custom plug to inspect the host
     plug ScopeTestWeb.Plugs.InspectHost
+    plug ScopeTestWeb.Plugs.CheckDomain
   end
 
   pipeline :api do
